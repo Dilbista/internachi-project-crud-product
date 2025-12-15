@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class AuthController
 {
     //
- public function show()
+    public function show()
     {
 
         return view('auth::authentication.register');
@@ -19,9 +19,9 @@ class AuthController
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:8',
         ]);
 
         User::create([
@@ -43,26 +43,32 @@ class AuthController
 
     {
         // DD(('here'));
+        
         return view('auth::authentication.login');
     }
-    public function login(Request $request)
+       public function login(Request $request)
     {
-        // DD('here');
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        // Validate input
+        $credentials = $request->validate([
+          'email' => 'required|email|',
+            'password' => 'required|',
         ]);
 
-        if (Auth::attempt(
-            $request->only('email', 'password'),
-            $request->filled('remember')
-        )) {
+        // Attempt authentication
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect('/dashboard');
+
+              return redirect()
+            ->route('dashboard')
+            ->with('success', 'logging successful');
         }
 
-        return back()->with('error', 'Invalid credentials');
+        // Authentication failed
+        return back()->withErrors([
+            'email' => 'Invalid credentials provided.',
+        ])->onlyInput('email');
     }
+
     public function Dashboard()
     {
         if (Auth::check()) {
@@ -89,7 +95,5 @@ class AuthController
 
         return redirect('/login')->with('success', 'Logged out successfully');
     }
-
-
 
 }

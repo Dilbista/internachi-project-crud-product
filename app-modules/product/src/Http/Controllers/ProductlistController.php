@@ -127,7 +127,7 @@ class ProductlistController
         $product->delete();
 
         return redirect()
-            ->route('product::index')
+            ->route('product.index')
             ->with('success', 'Product deleted successfully!');
     }
 }

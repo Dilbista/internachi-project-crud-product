@@ -14,14 +14,13 @@ use Illuminate\Support\Facades\Route;
 
 
 
-use AppModules\Auth\Http\Controllers\AuthController;
+use Modules\Auth\Http\Controllers\AuthController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('auths', AuthController::class)->names('auth');
 });
 
 // Modules/Auth/routes/web.php
-use Modules\Auth\App\Http\Controllers\RegisterController;
 
 
 Route::get('/register', [AuthController::class, 'show']);
@@ -29,7 +28,13 @@ Route::post('/register', [AuthController::class, 'store']);
 
 
 
-Route::get('/login', [AuthController::class, 'View_login'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::get('/dashboard', [AuthController::class, 'Dashboard']);
+// Route::get('/login', [AuthController::class, 'View_login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
+Route::middleware(['web'])->group(function () {
+Route::get('/login', [AuthController::class, 'View_login'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::get('/dashboard', [AuthController::class, 'Dashboard'])->name('dashboard');
+});
