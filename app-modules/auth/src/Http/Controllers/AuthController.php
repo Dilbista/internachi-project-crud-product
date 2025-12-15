@@ -72,14 +72,14 @@ class AuthController
     public function Dashboard()
     {
         if (Auth::check()) {
-            $data = [
-                'userCount' => 100,
-                'sales' => 50,
-                'messages' => 10,
-            ];
+            // $data = [
+            //     'userCount' => 100,
+            //     'sales' => 50,
+            //     'messages' => 10,
+            // ];
 
 
-            return view('auth::dashboard', $data);
+            return view('auth::dashboard');
         }
 
         return redirect('/login')->with('error', 'You must be logged in to access the dashboard');

@@ -12,12 +12,12 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Dashboard</h1>
 
-            <div>
 
-                <a href="{{ route('product.create') }}" class="btn btn-success btn-lg">
-                    <i class="bi bi-plus-circle"></i> Add Product
-                </a>
-            </div>
+
+            <a href="{{ route('product.index') }}" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle"></i> productsList
+            </a>
+
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-danger">Logout</button>
