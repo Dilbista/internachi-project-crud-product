@@ -10,67 +10,84 @@ use Illuminate\Support\Facades\Hash;
 class AuthController
 {
     //
-
-
-        public function showRegister()
+ public function show()
     {
+
         return view('auth::authentication.register');
     }
 
-    public function register(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'confirmed', 'min:6'],
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
         ]);
 
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
         ]);
+
 
         return redirect()
             ->route('login')
-            ->with('success', 'Registration successful. Please login.');
+            ->with('success', 'Registration successful');
     }
 
-    /* ===================== LOGIN ===================== */
 
-    public function showLogin()
+
+    public function View_login()
+
+
     {
+        // DD(('here'));
         return view('auth::authentication.login');
     }
-
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
-            'password' => ['required'],
+        // DD('here');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt(
+            $request->only('email', 'password'),
+            $request->filled('remember')
+        )) {
             $request->session()->regenerate();
-
-            return redirect()->intended('/dashboard');
+            return redirect('/dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Invalid email or password.',
-        ]);
+        return back()->with('error', 'Invalid credentials');
+    }
+    public function Dashboard()
+    {
+        if (Auth::check()) {
+            $data = [
+                'userCount' => 100,
+                'sales' => 50,
+                'messages' => 10,
+            ];
+
+
+            return view('auth::dashboard', $data);
+        }
+
+        return redirect('/login')->with('error', 'You must be logged in to access the dashboard');
     }
 
-    /* ===================== LOGOUT ===================== */
+
 
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect('/login')->with('success', 'Logged out successfully');
     }
 
 

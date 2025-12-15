@@ -16,16 +16,20 @@ use Illuminate\Support\Facades\Route;
 
 use AppModules\Auth\Http\Controllers\AuthController;
 
-Route::middleware(['web'])->group(function () {
-
-    // Register
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
-
-    // Login
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
-
-    // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('auths', AuthController::class)->names('auth');
 });
+
+// Modules/Auth/routes/web.php
+use Modules\Auth\App\Http\Controllers\RegisterController;
+
+
+Route::get('/register', [AuthController::class, 'show']);
+Route::post('/register', [AuthController::class, 'store']);
+
+
+
+Route::get('/login', [AuthController::class, 'View_login'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::get('/dashboard', [AuthController::class, 'Dashboard']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
