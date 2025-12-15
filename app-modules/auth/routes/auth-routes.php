@@ -22,19 +22,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Modules/Auth/routes/web.php
 
-
-Route::get('/register', [AuthController::class, 'show']);
-Route::post('/register', [AuthController::class, 'store']);
-
-
-
-// Route::get('/login', [AuthController::class, 'View_login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-
 Route::middleware(['web'])->group(function () {
-Route::get('/login', [AuthController::class, 'View_login'])->name('login');
+    Route::get('/login', [AuthController::class, 'View_login'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
     Route::get('/dashboard', [AuthController::class, 'Dashboard'])->name('dashboard');
+
+    Route::get('/register', [AuthController::class, 'show']);
+    Route::post('/register', [AuthController::class, 'store']);
+
+    // Route::get('/login', [AuthController::class, 'View_login'])->name('login');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
