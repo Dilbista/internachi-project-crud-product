@@ -1,10 +1,31 @@
 <?php
-use Illuminate\Support\Facades\Artisan;
 
-Artisan::command('product:deactivate', function () {
-    \Modules\Product\Models\Productlist::where('status', 'active')
-        ->where('quantity', 0)
-        ->update(['status' => 'inactive']);
+namespace App\Console;
 
-    $this->info('Inactive products updated successfully.');
-});
+use App\Models\User;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+
+class Kernel extends ConsoleKernel
+{
+    /**
+     * Define the application's command schedule.
+     */
+    protected function schedule(Schedule $schedule): void
+    {
+        dd('fhfhfy');
+        // Delete user with ID 1 every minute (for testing)
+        $schedule->call(function () {
+            User::where('id', 5)->delete();
+        })->everySecond();
+    }
+    /**r
+     * Register the commands for the application.
+     */
+    protected function commands(): void
+    {
+        $this->load(__DIR__ . '/Commands');
+
+        require base_path('routes/console.php');
+    }
+}
