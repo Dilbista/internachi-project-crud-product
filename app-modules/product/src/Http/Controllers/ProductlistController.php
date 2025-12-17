@@ -9,10 +9,18 @@ use Modules\Product\Models\Productlist;
 class ProductlistController
 {
     //
+ 
+
 
     public function index()
     {
-        $products = Productlist::latest()->get();
+        //this is for local scope
+        // $products = Productlist::active()->latest()->get();
+
+        //this is for global scope
+        $products = Productlist::all();
+        $allProducts = Productlist::withoutGlobalScope('active')->get();
+
 
         return view('product::index', compact('products'));
     }
@@ -51,7 +59,7 @@ class ProductlistController
 
                return redirect()
             ->route('product.index')
-            ->with('success', 'Product updated successfully');
+            ->with('success', 'Product add successfully');
     }
 
     public function edit($id)

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Modules\Auth\Notifications\UserRegister;
 
 class AuthController
 {
@@ -29,6 +30,10 @@ class AuthController
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
+
+        
+        $user = User::where('email', $request->input('email'))->first();
+        $user->notify(new UserRegister());
 
 
         return redirect()

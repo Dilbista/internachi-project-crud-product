@@ -12,5 +12,7 @@ class ProductServiceProvider extends ServiceProvider
 	
 	public function boot(): void
 	{
+		
 	}
+
 }
